@@ -4,10 +4,17 @@ export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
     useAsTitle: 'email',
+    defaultColumns: ['email', 'name', 'createdAt'],
   },
-  auth: true,
+  auth: {
+    tokenExpiration: 7200, // 2 hours
+  },
   fields: [
-    // Email added by default
-    // Add more fields as needed
+    {
+      name: 'name',
+      type: 'text',
+      label: 'Full Name',
+    },
+    // Email and password added by default via auth: true
   ],
 }

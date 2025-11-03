@@ -9,9 +9,15 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Templates } from './collections/Templates'
+import { Categories } from './collections/Categories'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Log the database URI at startup to help debug connection issues in dev
+// (this will print to the terminal where `pnpm dev` is run)
+console.log('DEBUG: process.env.DATABASE_URI =', process.env.DATABASE_URI)
 
 export default buildConfig({
   admin: {
@@ -20,7 +26,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [Users, Media, Templates, Categories],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -30,6 +36,12 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   sharp,
+  // GraphQL configuration
+  graphQL: {
+    schemaOutputFile: path.resolve(dirname, 'generated-schema.graphql'),
+  },
+  // Server URL configuration
+  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
   plugins: [
     payloadCloudPlugin(),
     // storage-adapter-placeholder
