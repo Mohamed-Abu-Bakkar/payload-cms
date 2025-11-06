@@ -12,7 +12,7 @@ interface TemplateCardProps {
 
 export default function TemplateCard({ template, index }: TemplateCardProps) {
   let thumbnail: string | null = null
-  
+
   if (typeof template.thumbnail === 'object' && template.thumbnail?.url) {
     const url = template.thumbnail.url
     // Payload typically provides full URLs, but handle relative paths too
@@ -21,13 +21,18 @@ export default function TemplateCard({ template, index }: TemplateCardProps) {
     } else if (url.startsWith('/')) {
       // In production, Payload should provide full URLs, but handle relative paths
       // Use window.location.origin in client component, or rely on Payload's serverURL
-      thumbnail = typeof window !== 'undefined' 
-        ? `${window.location.origin}${url}`
-        : url
+      thumbnail = typeof window !== 'undefined' ? `${window.location.origin}${url}` : url
     } else {
       thumbnail = url
     }
   }
+
+  // Ensure liveDemo URL has protocol
+  const liveDemoUrl = template.liveDemo
+    ? template.liveDemo.startsWith('http://') || template.liveDemo.startsWith('https://')
+      ? template.liveDemo
+      : `https://${template.liveDemo}`
+    : null
 
   return (
     <motion.div
@@ -64,19 +69,33 @@ export default function TemplateCard({ template, index }: TemplateCardProps) {
           )}
           <div className="template-overlay">
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={{ opacity: 0.9 }}
               whileHover={{ opacity: 1 }}
               className="template-actions"
             >
-              {template.liveDemo && (
+              {liveDemoUrl && (
                 <a
-                  href={template.liveDemo}
+                  href={liveDemoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
                   className="demo-button"
+                  title="View live demo"
                 >
-                  View Demo
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="demo-icon"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  Live Demo
                 </a>
               )}
             </motion.div>
@@ -84,9 +103,7 @@ export default function TemplateCard({ template, index }: TemplateCardProps) {
         </div>
         <div className="template-info">
           <h3 className="template-name">{template.name}</h3>
-          {template.description && (
-            <p className="template-description">{template.description}</p>
-          )}
+          {template.description && <p className="template-description">{template.description}</p>}
           <div className="template-footer">
             <div className="template-price">
               {template.price && template.price > 0 ? (
@@ -105,8 +122,7 @@ export default function TemplateCard({ template, index }: TemplateCardProps) {
                   {template.categories
                     .slice(0, 2)
                     .map((cat, idx) => {
-                      const category =
-                        typeof cat === 'object' ? cat : null
+                      const category = typeof cat === 'object' ? cat : null
                       return category ? (
                         <span key={idx} className="category-tag">
                           {category.title}
@@ -122,4 +138,3 @@ export default function TemplateCard({ template, index }: TemplateCardProps) {
     </motion.div>
   )
 }
-
