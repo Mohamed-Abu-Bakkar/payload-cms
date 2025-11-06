@@ -16,11 +16,17 @@ export default function TemplateCard({ template, index }: TemplateCardProps) {
   if (typeof template.thumbnail === 'object' && template.thumbnail?.url) {
     const url = template.thumbnail.url
     // Payload typically provides full URLs, but handle relative paths too
-    thumbnail = url.startsWith('http') 
-      ? url 
-      : url.startsWith('/') 
-        ? `http://localhost:3000${url}`
+    if (url.startsWith('http')) {
+      thumbnail = url
+    } else if (url.startsWith('/')) {
+      // In production, Payload should provide full URLs, but handle relative paths
+      // Use window.location.origin in client component, or rely on Payload's serverURL
+      thumbnail = typeof window !== 'undefined' 
+        ? `${window.location.origin}${url}`
         : url
+    } else {
+      thumbnail = url
+    }
   }
 
   return (

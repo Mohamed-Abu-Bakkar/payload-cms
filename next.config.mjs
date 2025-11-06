@@ -16,6 +16,16 @@ const nextConfig = {
         hostname: '**.amazonaws.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: '**.vercel.app',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.vercel-storage.com',
+        pathname: '/**',
+      },
     ],
     unoptimized: false,
   },
