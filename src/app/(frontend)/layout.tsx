@@ -4,7 +4,7 @@ import Header from './components/Header'
 
 export const metadata = {
   description: 'Discover beautifully crafted templates designed to help you build stunning websites faster.',
-  title: 'Template Store - Premium Templates for Your Next Project',
+  title: 'FolioMate',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {

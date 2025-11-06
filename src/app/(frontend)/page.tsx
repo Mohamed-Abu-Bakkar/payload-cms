@@ -5,7 +5,7 @@ import TemplateGrid from './components/TemplateGrid'
 import type { Template, Category } from '@/payload-types'
 
 export const metadata = {
-  title: 'Template Store - Premium Templates for Your Next Project',
+  title: 'Folio Mate',
   description: 'Discover beautifully crafted templates designed to help you build stunning websites faster.',
 }
 
